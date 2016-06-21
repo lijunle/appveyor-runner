@@ -38,3 +38,6 @@ jspm_packages
 
 # Compiled output
 dist
+
+# Node binary folder
+node_bin
