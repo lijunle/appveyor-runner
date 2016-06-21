@@ -66,7 +66,7 @@ function execute(stdout, stderr, version, script, env) {
     stdout(`[Runner][${version}][Script] ${script}`);
 
     let content = '';
-    const contentStream = concat(v => (content = v));
+    const contentStream = concat({ encoding: 'string' }, v => (content = v));
     const process = childProcess.exec(script, { env });
     process.on('exit', () => resolve(content));
     process.on('error', reject);
@@ -127,7 +127,7 @@ export default async function main() {
   const stderr = v => process.stderr.write(v + os.EOL);
   const dir = process.cwd();
   const versions = ['6.2.2'];
-  const scripts = ['node --version', 'npm --version', 'more index.js'];
+  const scripts = ['node --version', 'npm --version', 'more index.js >&2'];
 
   try {
     stdout(`[Runner] Start runner under ${dir}, with versions: ${versions}`);
@@ -136,6 +136,7 @@ export default async function main() {
     stdout('[Runner] All tasks are completed successfully!');
   } catch (error) {
     stderr('[Runner] Whoops! Get into trouble. :(');
-    stderr(error);
+    stderr(error.message);
+    stderr(error.stack);
   }
 }
