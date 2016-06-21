@@ -2,6 +2,7 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import through2 from 'through2';
+import concat from 'concat-stream';
 import mkdirp from 'mkdirp-promise';
 import download from 'download';
 import childProcess from 'child_process';
@@ -63,11 +64,20 @@ function output(log, version, channel) {
 function execute(stdout, stderr, version, script, env) {
   return new Promise((resolve, reject) => {
     stdout(`[Runner][${version}][Script] ${script}`);
+
+    let content = '';
+    const contentStream = concat(v => (content = v));
     const process = childProcess.exec(script, { env });
-    process.stdout.pipe(toString()).pipe(output(stdout, version, 'Stdout'));
-    process.stderr.pipe(toString()).pipe(output(stdout, version, 'Stderr'));
-    process.on('exit', resolve);
+    process.on('exit', () => resolve(content));
     process.on('error', reject);
+
+    const outStream = process.stdout.pipe(toString());
+    outStream.pipe(contentStream);
+    outStream.pipe(output(stdout, version, 'Stdout'));
+
+    const errStream = process.stderr.pipe(toString());
+    errStream.pipe(contentStream);
+    errStream.pipe(output(stdout, version, 'Stderr'));
   });
 }
 
@@ -97,10 +107,17 @@ async function run(stdout, stderr, dir, version, scripts) {
   const env = Object.assign({ PATH: `${nodeDir};${process.env.PATH}` }, process.env);
   stdout(`[Runner][${version}] Node path is added to environment: ${nodeDir}`);
 
+  const outputFile = path.resolve(nodeDir, `v${version}-output.txt`);
+  const outputStream = fs.createWriteStream(outputFile);
+  stdout(`[Runner][${version}] Created output file: ${outputFile}`);
+
   for (const script of scripts) {
-    await execute(stdout, stderr, version, script, env);
+    const outputContent = await execute(stdout, stderr, version, script, env);
+    outputStream.write(`${os.EOL}Runner> ${script}${os.EOL}`);
+    outputStream.write(outputContent);
   }
 
+  outputStream.end();
   stdout(`[Runner][${version}] Scripts completed.`);
 }
 
