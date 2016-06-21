@@ -1,0 +1,34 @@
+{
+  "name": "appveyor-runner",
+  "description": "Run multiple node.js versions on one AppVeyor worker.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Junle Li <lijunle@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/lijunle/appveyor-runner#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lijunle/appveyor-runner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lijunle/appveyor-runner/issues"
+  },
+  "keywords": [
+    "appveyor",
+    "runner",
+    "test",
+    "nodejs"
+  ],
+  "scripts": {
+    "compile": "babel src/ -d dist/",
+    "test": "npm run compile && node ./bin/appveyor-runner"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.9.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-3": "^6.5.0"
+  }
+}
