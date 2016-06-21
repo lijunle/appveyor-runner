@@ -28,7 +28,8 @@
     "babel-polyfill": "^6.9.1",
     "download": "^5.0.2",
     "mkdirp": "^0.5.1",
-    "mkdirp-promise": "^2.0.0"
+    "mkdirp-promise": "^2.0.0",
+    "through2": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

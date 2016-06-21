@@ -1,9 +1,11 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
+import through2 from 'through2';
 import mkdirp from 'mkdirp-promise';
 import download from 'download';
 import childProcess from 'child_process';
+import { StringDecoder } from 'string_decoder';
 
 function access(filePath) {
   return new Promise((resolve) =>
@@ -13,12 +15,60 @@ function access(filePath) {
   );
 }
 
-function execute(script, env) {
-  return new Promise((resolve, reject) =>
-    childProcess.exec(script, { env }, (error, stdout, stderr) =>
-      (error ? reject(error) : resolve({ stdout, stderr }))
-    )
-  );
+function toString() {
+  const decoder = new StringDecoder('utf8');
+
+  function transform(chunk, encoding, done) {
+    done(null, decoder.write(chunk));
+  }
+
+  function end(done) {
+    done(null, decoder.end());
+  }
+
+  return through2(transform, end);
+}
+
+function output(log, version, channel) {
+  let last = '';
+
+  function print(line) {
+    log(`[Runner][${version}][${channel}] ${line}`);
+  }
+
+  function transform(text, encoding, done) {
+    const current = last + text;
+    const lines = current.split(/[\r\n]/g).filter(x => x);
+    const outLines = lines.slice(0, -1);
+
+    for (const line of outLines) {
+      print(line);
+    }
+
+    last = lines.slice(-1)[0];
+    done();
+  }
+
+  function end(done) {
+    if (last) {
+      print(last);
+    }
+
+    done();
+  }
+
+  return through2(transform, end);
+}
+
+function execute(stdout, stderr, version, script, env) {
+  return new Promise((resolve, reject) => {
+    stdout(`[Runner][${version}][Script] ${script}`);
+    const process = childProcess.exec(script, { env });
+    process.stdout.pipe(toString()).pipe(output(stdout, version, 'Stdout'));
+    process.stderr.pipe(toString()).pipe(output(stdout, version, 'Stderr'));
+    process.on('exit', resolve);
+    process.on('error', reject);
+  });
 }
 
 async function getNode(stdout, stderr, dir, version) {
@@ -48,10 +98,7 @@ async function run(stdout, stderr, dir, version, scripts) {
   stdout(`[Runner][${version}] Node path is added to environment: ${nodeDir}`);
 
   for (const script of scripts) {
-    stdout(`[Runner][${version}][Script] ${script}`);
-    const { stdout: out, stderr: err } = await execute(script, env);
-    stdout(`[Runner][${version}][Stdout] ${out.trim()}`);
-    stdout(`[Runner][${version}][Stderr] ${err.trim()}`);
+    await execute(stdout, stderr, version, script, env);
   }
 
   stdout(`[Runner][${version}] Scripts completed.`);
@@ -63,7 +110,7 @@ export default async function main() {
   const stderr = v => process.stderr.write(v + os.EOL);
   const dir = process.cwd();
   const versions = ['6.2.2'];
-  const scripts = ['node --version', 'npm --version'];
+  const scripts = ['node --version', 'npm --version', 'more index.js'];
 
   try {
     stdout(`[Runner] Start runner under ${dir}, with versions: ${versions}`);
