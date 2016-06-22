@@ -82,7 +82,7 @@ function execute(stdout, stderr, version, script, env) {
 }
 
 async function getNode(stdout, stderr, dir, version) {
-  const arch = os.arch();
+  const arch = os.arch() === 'ia32' ? 'x86' : 'x64';
   const url = `https://nodejs.org/dist/v${version}/win-${arch}/node.exe`;
   const dest = path.resolve(dir, `v${version}-${arch}`);
   const node = path.resolve(dest, 'node.exe');
