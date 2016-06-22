@@ -20,7 +20,7 @@
     "nodejs"
   ],
   "scripts": {
-    "lint": "eslint ./src",
+    "lint": "eslint ./index.js ./src",
     "compile": "babel src/ -d dist/",
     "test": "npm run compile && node ./bin/appveyor-runner"
   },
