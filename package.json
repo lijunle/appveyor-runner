@@ -2,10 +2,13 @@
   "name": "appveyor-runner",
   "description": "Run multiple node.js versions on one AppVeyor worker.",
   "version": "0.0.1",
-  "main": "index.js",
   "author": "Junle Li <lijunle@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/lijunle/appveyor-runner#readme",
+  "main": "dist/index.js",
+  "bin": {
+    "appveyor-runner": "bin/appveyor-runner"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lijunle/appveyor-runner.git"

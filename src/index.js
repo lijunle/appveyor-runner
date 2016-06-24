@@ -121,14 +121,9 @@ async function run(stdout, stderr, dir, version, scripts) {
   stdout(`[Runner][${version}] Scripts completed.`);
 }
 
-export default async function main() {
-  // TODO make as parameters
-  const stdout = v => process.stdout.write(v + os.EOL);
-  const stderr = v => process.stderr.write(v + os.EOL);
-  const dir = process.cwd();
-  const versions = ['6.2.2'];
-  const scripts = ['node --version', 'npm --version', 'more index.js >&2'];
-
+export default async function runner(out, err, dir, versions, scripts) {
+  const stdout = v => out.write(v + os.EOL);
+  const stderr = v => err.write(v + os.EOL);
   try {
     stdout(`[Runner] Start runner under ${dir}, with versions: ${versions}`);
     const binDir = path.resolve(dir, 'node_bin');
