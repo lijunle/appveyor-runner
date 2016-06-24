@@ -101,13 +101,13 @@ async function getNode(stdout, stderr, dir, version) {
   return node;
 }
 
-async function run(stdout, stderr, dir, version, scripts) {
-  const node = await getNode(stdout, stderr, dir, version);
+async function run(stdout, stderr, binDir, logDir, version, scripts) {
+  const node = await getNode(stdout, stderr, binDir, version);
   const nodeDir = path.dirname(node);
   const env = Object.assign({ PATH: `${nodeDir};${process.env.PATH}` }, process.env);
   stdout(`[Runner][${version}] Node path is added to environment: ${nodeDir}`);
 
-  const outputFile = path.resolve(nodeDir, `v${version}-output.txt`);
+  const outputFile = path.resolve(logDir, `v${version}-output.txt`);
   const outputStream = fs.createWriteStream(outputFile);
   stdout(`[Runner][${version}] Created output file: ${outputFile}`);
 
@@ -121,13 +121,17 @@ async function run(stdout, stderr, dir, version, scripts) {
   stdout(`[Runner][${version}] Scripts completed.`);
 }
 
-export default async function runner(out, err, dir, versions, scripts) {
+export default async function runner(out, err, binDir, logDir, versions, scripts) {
   const stdout = v => out.write(v + os.EOL);
   const stderr = v => err.write(v + os.EOL);
   try {
-    stdout(`[Runner] Start runner under ${dir}, with versions: ${versions}`);
-    const binDir = path.resolve(dir, 'node_bin');
-    await Promise.all(versions.map(v => run(stdout, stderr, binDir, v, scripts)));
+    stdout(`[Runner] Start runner with versions: ${versions}`);
+    stdout(`[Runner] Got binary directory: ${binDir}`);
+
+    await mkdirp(logDir);
+    stdout(`[Runner] Got log directory and created: ${logDir}`);
+
+    await Promise.all(versions.map(v => run(stdout, stderr, binDir, logDir, v, scripts)));
     stdout('[Runner] All tasks are completed successfully!');
   } catch (error) {
     stderr('[Runner] Whoops! Get into trouble. :(');
