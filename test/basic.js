@@ -1,17 +1,13 @@
-import path from 'path';
 import { EOL } from 'os';
-
 import test from './tape';
 import runner from '../src/index';
-
-const binDir = path.resolve(__dirname, '../node_bin');
 
 test('runner should exit with 0 if everything is good', async (t, context) => {
   const code = await runner(
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['6.2.2'],
     ['node -v']
@@ -25,7 +21,7 @@ test('runner should exit with -1 if something goes wrong', async (t, context) =>
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['6.2.2'],
     ['not-exist-command']
@@ -42,7 +38,7 @@ test('runner should redirect stdout', async (t, context) => {
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['6.2.2'],
     [script]
@@ -66,7 +62,7 @@ test('runner should redirect stderr', async (t, context) => {
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['6.2.2'],
     [script]
@@ -87,7 +83,7 @@ test('runner should run multiple versions', async (t, context) => {
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['4.4.6', '6.2.2'],
     ['node -e "console.log(JSON.stringify(process.versions))"']
@@ -105,7 +101,7 @@ test('runner should run multiple scripts', async (t, context) => {
     context.stdout,
     context.stderr,
     __dirname,
-    binDir,
+    context.binDir,
     context.logDir,
     ['6.2.2'],
     ['node -e "console.log(`script-1`)"', 'node -e "console.log(`script-2`)"']

@@ -4,6 +4,8 @@ import mkdirp from 'mkdirp-promise';
 import tape from 'tape-promise/tape';
 import { Test } from 'tape';
 
+const binDir = path.resolve(__dirname, '../node_bin');
+
 Test.prototype.includes = function includes(a, b, msg, extra) {
   this._assert(a.includes(b), { // eslint-disable-line no-underscore-dangle
     message: msg || 'should includes',
@@ -51,6 +53,7 @@ export default function test(name, listener) {
 
     // assign the variables to context for test case
     const context = {
+      binDir,
       logDir,
       stdout,
       stderr,
