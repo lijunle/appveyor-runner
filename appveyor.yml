@@ -14,3 +14,21 @@ test_script:
   - more .\coverage\coverage.json | node_modules\.bin\codecov
 
 build: off
+
+environment:
+  NPM_RC:
+    secure: Mmn462S8eZ1Ru1g6yjP7iOcNmC4vyP2Udq02LREWsuzb9+BFaPm4AEOjCXYZkcRgFlAdVUDqxkiZiWSVeSB+CFffpdu0qwabYDeUuxaSO0c=
+
+before_deploy:
+  - node_modules\.bin\patch-version
+
+deploy_script:
+  - cmd: if %APPVEYOR_REPO_TAG% equ true echo %NPM_RC%> .npmrc && npm publish
+
+deploy:
+  - provider: GitHub
+    description: ''
+    auth_token:
+      secure: I3P9KP3V4IjhWsA7n6F/nSEkHkfg1VYBSmAsnBDfrq5RdgPgHO3+MCf8PmkGq3ej
+    on:
+      appveyor_repo_tag: true
