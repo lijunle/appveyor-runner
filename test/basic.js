@@ -10,6 +10,7 @@ test('runner should exit with 0 if everything is good', async (t, context) => {
   const code = await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['6.2.2'],
@@ -23,6 +24,7 @@ test('runner should exit with -1 if something goes wrong', async (t, context) =>
   const code = await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['6.2.2'],
@@ -39,6 +41,7 @@ test('runner should redirect stdout', async (t, context) => {
   await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['6.2.2'],
@@ -62,6 +65,7 @@ test('runner should redirect stderr', async (t, context) => {
   await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['6.2.2'],
@@ -82,6 +86,7 @@ test('runner should run multiple versions', async (t, context) => {
   await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['4.4.6', '6.2.2'],
@@ -99,6 +104,7 @@ test('runner should run multiple scripts', async (t, context) => {
   await runner(
     context.stdout,
     context.stderr,
+    __dirname,
     binDir,
     context.logDir,
     ['6.2.2'],

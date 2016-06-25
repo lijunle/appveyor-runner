@@ -61,13 +61,13 @@ function output(log, version, channel) {
   return through2(transform, end);
 }
 
-function execute(stdout, stderr, version, script, env) {
+function execute(stdout, stderr, version, script, cwd, env) {
   return new Promise((resolve, reject) => {
     stdout(`[Runner][${version}][Script] ${script}`);
 
     let content = '';
     const contentStream = concat({ encoding: 'string' }, v => (content = v));
-    const process = childProcess.exec(script, { env });
+    const process = childProcess.exec(script, { cwd, env });
     process.on('exit', code => resolve({ code, content }));
     process.on('error', reject);
 
@@ -101,7 +101,7 @@ async function getNode(stdout, stderr, dir, version) {
   return node;
 }
 
-async function run(stdout, stderr, binDir, logDir, version, scripts) {
+async function run(stdout, stderr, cwd, binDir, logDir, version, scripts) {
   const node = await getNode(stdout, stderr, binDir, version);
   const nodeDir = path.dirname(node);
   const env = Object.assign({ PATH: `${nodeDir};${process.env.PATH}` }, process.env);
@@ -113,7 +113,7 @@ async function run(stdout, stderr, binDir, logDir, version, scripts) {
 
   let exitCode = 0;
   for (const script of scripts) {
-    const result = await execute(stdout, stderr, version, script, env);
+    const result = await execute(stdout, stderr, version, script, cwd, env);
     outputStream.write(`${os.EOL}[${result.code}] Runner> ${script}${os.EOL}`);
     outputStream.write(result.content);
     exitCode = result.code === 0 ? exitCode : -1;
@@ -124,7 +124,7 @@ async function run(stdout, stderr, binDir, logDir, version, scripts) {
   return exitCode;
 }
 
-export default async function runner(out, err, binDir, logDir, versions, scripts) {
+export default async function runner(out, err, cwd, binDir, logDir, versions, scripts) {
   const stdout = v => out.write(v + os.EOL);
   const stderr = v => err.write(v + os.EOL);
   try {
@@ -134,7 +134,7 @@ export default async function runner(out, err, binDir, logDir, versions, scripts
     await mkdirp(logDir);
     stdout(`[Runner] Got log directory and created: ${logDir}`);
 
-    const runs = versions.map(v => run(stdout, stderr, binDir, logDir, v, scripts));
+    const runs = versions.map(v => run(stdout, stderr, cwd, binDir, logDir, v, scripts));
     const exitCode = (await Promise.all(runs)).some(code => code !== 0) ? -1 : 0;
     stdout(`[Runner] All tasks are completed. Return exit code: ${exitCode}`);
     return exitCode;

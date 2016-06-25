@@ -5,6 +5,7 @@ export default function cli() {
   return runner(
     process.stdout,
     process.stderr,
+    process.cwd(),
     path.resolve(process.cwd(), 'node_bin'),
     path.resolve(process.cwd(), 'node_log'),
     ['6.2.2'],
