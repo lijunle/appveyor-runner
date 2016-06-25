@@ -104,7 +104,8 @@ async function getNode(stdout, stderr, dir, version) {
 async function run(stdout, stderr, cwd, binDir, logDir, version, scripts) {
   const node = await getNode(stdout, stderr, binDir, version);
   const nodeDir = path.dirname(node);
-  const env = Object.assign({ PATH: `${nodeDir};${process.env.PATH}` }, process.env);
+  const moduleDir = path.resolve(cwd, './node_modules/.bin');
+  const env = Object.assign({ PATH: `${nodeDir};${moduleDir};${process.env.PATH}` }, process.env);
   stdout(`[Runner][${version}] Node path is added to environment: ${nodeDir}`);
 
   const outputFile = path.resolve(logDir, `v${version}-output.txt`);
