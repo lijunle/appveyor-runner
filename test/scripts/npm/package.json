@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "show-path": "echo %PATH%"
+  }
+}
