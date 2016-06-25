@@ -1,0 +1,16 @@
+cache:
+  - node_modules -> package.json
+
+install:
+  - npm -g install npm@3 && set PATH=%APPDATA%\npm;%PATH%
+  - npm install
+
+test_script:
+  - node --version
+  - npm --version
+  - npm run build
+  - npm run lint
+  - npm run test-coverage
+  - more .\coverage\coverage.json | node_modules\.bin\codecov
+
+build: off
