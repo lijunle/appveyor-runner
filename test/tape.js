@@ -14,6 +14,16 @@ Test.prototype.includes = function includes(a, b, msg, extra) {
   });
 };
 
+Test.prototype.below = function includes(a, b, msg, extra) {
+  this._assert(a < b, { // eslint-disable-line no-underscore-dangle
+    message: msg || 'should be below',
+    operator: 'below',
+    expected: b,
+    actual: a,
+    extra,
+  });
+};
+
 function createStream() {
   let str = '';
 
