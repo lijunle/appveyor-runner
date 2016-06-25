@@ -68,7 +68,7 @@ function execute(stdout, stderr, version, script, env) {
     let content = '';
     const contentStream = concat({ encoding: 'string' }, v => (content = v));
     const process = childProcess.exec(script, { env });
-    process.on('exit', () => resolve(content));
+    process.on('exit', code => resolve({ code, content }));
     process.on('error', reject);
 
     const outStream = process.stdout.pipe(toString());
@@ -111,14 +111,17 @@ async function run(stdout, stderr, binDir, logDir, version, scripts) {
   const outputStream = fs.createWriteStream(outputFile);
   stdout(`[Runner][${version}] Created output file: ${outputFile}`);
 
+  let exitCode = 0;
   for (const script of scripts) {
-    const outputContent = await execute(stdout, stderr, version, script, env);
-    outputStream.write(`${os.EOL}Runner> ${script}${os.EOL}`);
-    outputStream.write(outputContent);
+    const result = await execute(stdout, stderr, version, script, env);
+    outputStream.write(`${os.EOL}[${result.code}] Runner> ${script}${os.EOL}`);
+    outputStream.write(result.content);
+    exitCode = result.code === 0 ? exitCode : -1;
   }
 
   outputStream.end();
-  stdout(`[Runner][${version}] Scripts completed.`);
+  stdout(`[Runner][${version}] Scripts completed with exit code ${exitCode}.`);
+  return exitCode;
 }
 
 export default async function runner(out, err, binDir, logDir, versions, scripts) {
@@ -131,11 +134,14 @@ export default async function runner(out, err, binDir, logDir, versions, scripts
     await mkdirp(logDir);
     stdout(`[Runner] Got log directory and created: ${logDir}`);
 
-    await Promise.all(versions.map(v => run(stdout, stderr, binDir, logDir, v, scripts)));
-    stdout('[Runner] All tasks are completed successfully!');
+    const runs = versions.map(v => run(stdout, stderr, binDir, logDir, v, scripts));
+    const exitCode = (await Promise.all(runs)).some(code => code !== 0) ? -1 : 0;
+    stdout(`[Runner] All tasks are completed. Return exit code: ${exitCode}`);
+    return exitCode;
   } catch (error) {
     stderr('[Runner] Whoops! Get into trouble. :(');
     stderr(error.message);
     stderr(error.stack);
+    return -1;
   }
 }

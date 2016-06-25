@@ -6,6 +6,32 @@ import runner from '../src/index';
 
 const binDir = path.resolve(__dirname, '../node_bin');
 
+test('runner should exit with 0 if everything is good', async (t, context) => {
+  const code = await runner(
+    context.stdout,
+    context.stderr,
+    binDir,
+    context.logDir,
+    ['6.2.2'],
+    ['node -v']
+  );
+
+  t.equal(code, 0);
+});
+
+test('runner should exit with -1 if something goes wrong', async (t, context) => {
+  const code = await runner(
+    context.stdout,
+    context.stderr,
+    binDir,
+    context.logDir,
+    ['6.2.2'],
+    ['not-exist-command']
+  );
+
+  t.equal(code, -1);
+});
+
 test('runner should redirect stdout', async (t, context) => {
   const output = 'This should be output to stdout!';
   const script = `node -e "console.log('${output}')"`;
