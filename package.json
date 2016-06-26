@@ -23,7 +23,7 @@
     "nodejs"
   ],
   "scripts": {
-    "lint": "eslint ./src ./test",
+    "lint": "eslint ./src ./test ./build",
     "build": "babel src/ -d dist/"
   },
   "dependencies": {

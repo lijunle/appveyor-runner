@@ -12,7 +12,7 @@ test_script:
   - npm run lint
   - .\test.cmd
   - .\test.cmd coverage
-  - more .\coverage\coverage.json | node_modules\.bin\codecov
+  - node .\build\coverage.js | node_modules\.bin\codecov
 
 build: off
 

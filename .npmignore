@@ -1,5 +1,6 @@
 # Ignore there folders because they will not be used in production code.
 # Reference: http://blog.xebia.com/2015/09/22/publishing-es6-code-to-npm/
+build/
 coverage/
 node_bin/
 node_log/
