@@ -34,12 +34,14 @@ function output(log, version, channel) {
   let last = '';
 
   function print(line) {
-    log(`[Runner][${version}][${channel}] ${line}`);
+    if (line) {
+      log(`[Runner][${version}][${channel}] ${line}`);
+    }
   }
 
   function transform(text, encoding, done) {
     const current = last + text;
-    const lines = current.split(/[\r\n]/g).filter(x => x);
+    const lines = current.split(/[\r\n]/g);
     const outLines = lines.slice(0, -1);
 
     for (const line of outLines) {

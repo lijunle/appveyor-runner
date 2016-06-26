@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "show-path": "echo %PATH%"
+    "show-path": "echo %PATH%",
+    "show-random": "more random.txt"
   }
 }
