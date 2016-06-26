@@ -5,7 +5,7 @@
   "author": "Junle Li <lijunle@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/lijunle/appveyor-runner#readme",
-  "main": "dist/index.js",
+  "main": "index.js",
   "bin": {
     "appveyor-runner": "bin/appveyor-runner"
   },
