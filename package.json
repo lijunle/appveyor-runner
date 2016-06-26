@@ -23,10 +23,8 @@
     "nodejs"
   ],
   "scripts": {
-    "lint": "eslint ./index.js ./src",
-    "build": "babel src/ -d dist/",
-    "test": "babel-node node_modules/tape/bin/tape ./test/**/*.js",
-    "test-coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/tape/bin/tape -- ./test/**/*.js"
+    "lint": "eslint ./src ./test",
+    "build": "babel src/ -d dist/"
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",

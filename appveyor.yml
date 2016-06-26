@@ -10,7 +10,7 @@ test_script:
   - npm --version
   - npm run build
   - npm run lint
-  - npm run test-coverage
+  - .\test.cmd coverage
   - more .\coverage\coverage.json | node_modules\.bin\codecov
 
 build: off
