@@ -8,6 +8,8 @@ import download from 'download';
 import childProcess from 'child_process';
 import { StringDecoder } from 'string_decoder';
 
+import parseVersions from './parse-versions';
+
 function access(filePath) {
   return new Promise((resolve) =>
     fs.access(filePath, (error) =>
@@ -131,13 +133,16 @@ export default async function runner(out, err, cwd, binDir, logDir, versions, sc
   const stdout = v => out.write(v + os.EOL);
   const stderr = v => err.write(v + os.EOL);
   try {
-    stdout(`[Runner] Start runner with versions: ${versions}`);
+    stdout('[Runner] Start runner.');
     stdout(`[Runner] Got binary directory: ${binDir}`);
 
     await mkdirp(logDir);
     stdout(`[Runner] Got log directory and created: ${logDir}`);
 
-    const runs = versions.map(v => run(stdout, stderr, cwd, binDir, logDir, v, scripts));
+    const targetVersions = await parseVersions(versions);
+    stdout(`[Runner] Got target versions: ${targetVersions}`);
+
+    const runs = targetVersions.map(v => run(stdout, stderr, cwd, binDir, logDir, v, scripts));
     const exitCode = (await Promise.all(runs)).some(code => code !== 0) ? -1 : 0;
     stdout(`[Runner] All tasks are completed. Return exit code: ${exitCode}`);
     return exitCode;
