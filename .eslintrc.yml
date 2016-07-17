@@ -1,2 +1,4 @@
 parser: babel-eslint
 extends: airbnb-base
+rules:
+  generator-star-spacing: 0 # Workaround for babel/babel-eslint#316
