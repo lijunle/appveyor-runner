@@ -2,6 +2,19 @@ import path from 'path';
 import test from './tape';
 import cli from '../src/cli';
 
+test('CLI should default config file to appveyor.yml', async (t, context) => {
+  const getStdout = context.hookStream(process.stdout);
+  const restoreCwd = context.hookCwd(path.resolve(__dirname, './configs'));
+
+  const code = await cli();
+  t.equal(code, 0);
+
+  const stdout = getStdout();
+  t.includes(stdout, 'Default to appveyor.yml file');
+
+  restoreCwd();
+});
+
 test('CLI should parse config and run scripts', async (t, context) => {
   const getStdout = context.hookStream(process.stdout);
 

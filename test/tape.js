@@ -84,6 +84,12 @@ function hookStream(stream) {
   };
 }
 
+function hookCwd(targetPath) {
+  const originalCwd = process.cwd;
+  process.cwd = () => targetPath;
+  return () => (process.cwd = originalCwd);
+}
+
 export default function test(name, listener) {
   tape(name, async (t) => {
     // create unique log folder for each test case
@@ -104,6 +110,7 @@ export default function test(name, listener) {
       getStdout,
       getStderr,
       hookStream,
+      hookCwd,
     };
 
     // run the listener

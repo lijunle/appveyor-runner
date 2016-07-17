@@ -12,5 +12,5 @@ function readFile(file) {
 export default async function parseConfig(configFile) {
   const content = await readFile(configFile);
   const config = yaml.safeLoad(content);
-  return config.runner;
+  return config.runner || {};
 }

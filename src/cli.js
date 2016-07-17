@@ -2,8 +2,8 @@ import path from 'path';
 import runner from './index';
 import parseConfig from './parse-config';
 
-export default async function cli(configFile) {
-  const configDir = path.dirname(configFile);
+export default async function cli(configFile = 'appveyor.yml') {
+  const configDir = path.dirname(path.resolve(process.cwd(), configFile));
   const config = await parseConfig(configFile);
 
   const cwd = config.cwd
@@ -24,7 +24,7 @@ export default async function cli(configFile) {
     cwd,
     binDir,
     logDir,
-    config.versions,
-    config.scripts,
+    config.versions || [],
+    config.scripts || [],
   );
 }
