@@ -12,11 +12,11 @@ export default async function cli(configFile = 'appveyor-runner.yml') {
 
   const binDir = config.bin
     ? path.resolve(configDir, config.bin)
-    : path.resolve(process.cwd(), 'node_bin');
+    : path.resolve(cwd, 'node_bin');
 
   const logDir = config.log
     ? path.resolve(configDir, config.log)
-    : path.resolve(process.cwd(), 'node_log');
+    : path.resolve(cwd, 'node_log');
 
   return runner(
     process.stdout,
