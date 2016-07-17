@@ -1,14 +1,30 @@
 import path from 'path';
 import runner from './index';
+import parseConfig from './parse-config';
 
-export default function cli() {
+export default async function cli(configFile = 'appveyor.yml') {
+  const configDir = path.dirname(path.resolve(process.cwd(), configFile));
+  const config = await parseConfig(configFile);
+
+  const cwd = config.cwd
+    ? path.resolve(configDir, config.cwd)
+    : process.cwd();
+
+  const binDir = config.bin
+    ? path.resolve(configDir, config.bin)
+    : path.resolve(process.cwd(), 'node_bin');
+
+  const logDir = config.log
+    ? path.resolve(configDir, config.log)
+    : path.resolve(process.cwd(), 'node_log');
+
   return runner(
     process.stdout,
     process.stderr,
-    process.cwd(),
-    path.resolve(process.cwd(), 'node_bin'),
-    path.resolve(process.cwd(), 'node_log'),
-    ['6.2.2'],
-    ['node --version', 'npm --version', 'more index.js >&2']
+    cwd,
+    binDir,
+    logDir,
+    config.versions || [],
+    config.scripts || [],
   );
 }

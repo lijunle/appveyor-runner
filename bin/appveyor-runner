@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
 require('babel-polyfill');
-require('../dist/cli').default();
+require('../dist/cli').default(process.argv[2]);

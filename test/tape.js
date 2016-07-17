@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import through2 from 'through2';
 import mkdirp from 'mkdirp-promise';
@@ -26,6 +27,32 @@ Test.prototype.below = function includes(a, b, msg, extra) {
   });
 };
 
+function doesPathExist(targetPath) {
+  try {
+    fs.accessSync(targetPath);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function findUpPath(targetPath) {
+  const pathDir = path.dirname(targetPath);
+  return doesPathExist(pathDir)
+    ? pathDir
+    : findUpPath(pathDir);
+}
+
+Test.prototype.exists = function exists(targetPath, msg, extra) {
+  this._assert(doesPathExist(targetPath), { // eslint-disable-line no-underscore-dangle
+    message: msg || 'should exist',
+    operator: 'exists',
+    expected: targetPath,
+    get actual() { return findUpPath(targetPath); },
+    extra,
+  });
+};
+
 function createStream() {
   let str = '';
 
@@ -38,6 +65,29 @@ function createStream() {
     stream,
     str: () => str,
   };
+}
+
+function hookStream(stream) {
+  let str = '';
+  const originalStdoutWrite = stream._write; // eslint-disable-line no-underscore-dangle
+
+  // eslint-disable-next-line no-param-reassign, no-underscore-dangle
+  stream._write = (chunk, encoding, done) => {
+    str += chunk;
+    done();
+  };
+
+  return () => {
+    // eslint-disable-next-line no-param-reassign, no-underscore-dangle
+    stream._write = originalStdoutWrite;
+    return str;
+  };
+}
+
+function hookCwd(targetPath) {
+  const originalCwd = process.cwd;
+  process.cwd = () => targetPath;
+  return () => (process.cwd = originalCwd);
 }
 
 export default function test(name, listener) {
@@ -59,6 +109,8 @@ export default function test(name, listener) {
       stderr,
       getStdout,
       getStderr,
+      hookStream,
+      hookCwd,
     };
 
     // run the listener
