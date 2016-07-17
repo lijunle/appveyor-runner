@@ -1,5 +1,5 @@
-bin: ./fixture-2/bin
-log: ./fixture-2/log
+bin_dir: ./fixture-2/bin
+log_dir: ./fixture-2/log
 
 version:
   - 6.2.2

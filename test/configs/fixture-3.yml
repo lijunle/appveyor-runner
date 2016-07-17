@@ -1,4 +1,4 @@
-cwd: ./fixture-3
+working_dir: ./fixture-3
 
 version:
   - 6.2.2
