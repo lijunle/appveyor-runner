@@ -15,8 +15,8 @@ test('runner should exit politely if create directory fail', async (t, context) 
   t.equal(code, -1);
 
   const stderr = context.getStderr();
-  t.includes(stderr, '[Runner] Whoops! Get into trouble. :(');
-  t.includes(stderr, `EEXIST: file already exists, mkdir '${__filename}'`);
+  t.include(stderr, '[Runner] Whoops! Get into trouble. :(');
+  t.include(stderr, `EEXIST: file already exists, mkdir '${__filename}'`);
 });
 
 test('runner should exit politely if version cannot be parsed', async (t, context) => {
@@ -33,6 +33,6 @@ test('runner should exit politely if version cannot be parsed', async (t, contex
   t.equal(code, -1);
 
   const stderr = context.getStderr();
-  t.includes(stderr, '[Runner] Whoops! Get into trouble. :(');
-  t.includes(stderr, 'Verson INVALID does not satisfy any node.js versions');
+  t.include(stderr, '[Runner] Whoops! Get into trouble. :(');
+  t.include(stderr, 'Verson INVALID does not satisfy any node.js versions');
 });

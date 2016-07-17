@@ -7,17 +7,17 @@ import { Test } from 'tape';
 
 const binDir = path.resolve(__dirname, './bin');
 
-Test.prototype.includes = function includes(a, b, msg, extra) {
+Test.prototype.include = function include(a, b, msg, extra) {
   this._assert(a.includes(b), { // eslint-disable-line no-underscore-dangle
-    message: msg || 'should includes',
-    operator: 'includes',
+    message: msg || 'should include',
+    operator: 'include',
     expected: b,
     actual: a,
     extra,
   });
 };
 
-Test.prototype.below = function includes(a, b, msg, extra) {
+Test.prototype.below = function include(a, b, msg, extra) {
   this._assert(a < b, { // eslint-disable-line no-underscore-dangle
     message: msg || 'should be below',
     operator: 'below',
@@ -43,10 +43,10 @@ function findUpPath(targetPath) {
     : findUpPath(pathDir);
 }
 
-Test.prototype.exists = function exists(targetPath, msg, extra) {
+Test.prototype.exist = function exist(targetPath, msg, extra) {
   this._assert(doesPathExist(targetPath), { // eslint-disable-line no-underscore-dangle
     message: msg || 'should exist',
-    operator: 'exists',
+    operator: 'exist',
     expected: targetPath,
     get actual() { return findUpPath(targetPath); },
     extra,

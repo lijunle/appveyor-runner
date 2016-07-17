@@ -17,7 +17,7 @@ test('npm should append .bin to environment path', async (t, context) => {
 
   const stdout = context.getStdout();
   const npmBinDir = path.resolve(__dirname, './scripts/npm/node_modules/.bin');
-  t.includes(stdout, npmBinDir);
+  t.include(stdout, npmBinDir);
 });
 
 test('npm should output line by line', async (t, context) => {
