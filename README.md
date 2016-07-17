@@ -21,8 +21,8 @@ npm install --save-dev appveyor-runner
 ## Schema
 
 - `working_dir` - The working directory to run scripts. Default to `process.cwd()` folder.
-- `bin` - The file path to download the node.js binaries. Default to `node_bin` folder under `working_dir`.
-- `log` - The file path to store execute ouput. Default to `node_log` folder under `working_dir`.
+- `bin_dir` - The directory to store the node.js binaries. Default to `node_bin` folder under `working_dir`.
+- `log_dir` - The directory to store execute ouput. Default to `node_log` folder under `working_dir`.
 - `version` - The target execute node.js version array. Semver versions are supported. Default is empty array.
 - `script` - The execute script array. The `node_modules/.bin` path is appended to `PATH` environment variable automatically. Default is empty script array.
 
@@ -34,8 +34,8 @@ For the directories, either relative or absolute path are OK. If it is relative 
 
 ```yaml
 working_dir: .\path\to\working_dir
-bin: C:\path\to\node_dir
-log: .\path\to\log_dir
+bin_dir: C:\path\to\node_dir
+log_dir: C:\path\to\log_dir
 
 version:
   - 4.x

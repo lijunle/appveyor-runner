@@ -1,5 +1,5 @@
-bin: ..\tape\bin
-log: .\appveyor-runner\log
+bin_dir: ..\tape\bin
+log_dir: .\appveyor-runner\log
 
 version:
   - 6.2.2
