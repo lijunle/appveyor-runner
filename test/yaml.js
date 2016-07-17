@@ -52,7 +52,7 @@ test('CLI should parse bin and log dir from config', async (t, context) => {
   t.exist(logPath);
 });
 
-test('CLI should parse cwd from config', async (t, context) => {
+test('CLI should parse working dir from config', async (t, context) => {
   const getStdout = context.hookStream(process.stdout);
 
   const configFile = path.resolve(__dirname, './configs/fixture-3.yml');

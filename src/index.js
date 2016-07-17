@@ -65,13 +65,13 @@ function output(log, version, channel) {
   return through2(transform, end);
 }
 
-function execute(stdout, stderr, version, script, cwd, env) {
+function execute(stdout, stderr, version, script, workingDir, env) {
   return new Promise((resolve, reject) => {
     stdout(`[Runner][${version}][Script] ${script}`);
 
     let content = '';
     const contentStream = concat({ encoding: 'string' }, v => (content = v));
-    const process = childProcess.exec(script, { cwd, env });
+    const process = childProcess.exec(script, { cwd: workingDir, env });
     process.on('exit', code => resolve({ code, content }));
     process.on('error', reject);
 
@@ -105,10 +105,10 @@ async function getNode(stdout, stderr, dir, version) {
   return node;
 }
 
-async function run(stdout, stderr, cwd, binDir, logDir, version, scripts) {
+async function run(stdout, stderr, workingDir, binDir, logDir, version, scripts) {
   const node = await getNode(stdout, stderr, binDir, version);
   const nodeDir = path.dirname(node);
-  const moduleDir = path.resolve(cwd, './node_modules/.bin');
+  const moduleDir = path.resolve(workingDir, './node_modules/.bin');
   const env = Object.assign({ PATH: `${nodeDir};${moduleDir};${process.env.PATH}` }, process.env);
   stdout(`[Runner][${version}] Node path is added to environment: ${nodeDir}`);
 
@@ -118,7 +118,7 @@ async function run(stdout, stderr, cwd, binDir, logDir, version, scripts) {
 
   let exitCode = 0;
   for (const script of scripts) {
-    const result = await execute(stdout, stderr, version, script, cwd, env);
+    const result = await execute(stdout, stderr, version, script, workingDir, env);
     outputStream.write(`${os.EOL}[${result.code}] Runner> ${script}${os.EOL}`);
     outputStream.write(result.content);
     exitCode = result.code === 0 ? exitCode : -1;
@@ -129,7 +129,7 @@ async function run(stdout, stderr, cwd, binDir, logDir, version, scripts) {
   return exitCode;
 }
 
-export default async function runner(out, err, cwd, binDir, logDir, versions, scripts) {
+export default async function runner(out, err, workingDir, binDir, logDir, versions, scripts) {
   const stdout = v => out.write(v + os.EOL);
   const stderr = v => err.write(v + os.EOL);
   try {
@@ -142,7 +142,7 @@ export default async function runner(out, err, cwd, binDir, logDir, versions, sc
     const targetVersions = await parseVersions(versions);
     stdout(`[Runner] Got target versions: ${targetVersions}`);
 
-    const runs = targetVersions.map(v => run(stdout, stderr, cwd, binDir, logDir, v, scripts));
+    const runs = targetVersions.map(v => run(stdout, stderr, workingDir, binDir, logDir, v, scripts));
     const exitCode = (await Promise.all(runs)).some(code => code !== 0) ? -1 : 0;
     stdout(`[Runner] All tasks are completed. Return exit code: ${exitCode}`);
     return exitCode;
