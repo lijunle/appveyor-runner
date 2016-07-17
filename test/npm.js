@@ -50,8 +50,8 @@ test('npm should output line by line', async (t, context) => {
     }
 
     t._assert(false, { // eslint-disable-line no-underscore-dangle
-      message: 'should contains in line',
-      operator: 'contains in line',
+      message: 'should contain in line',
+      operator: 'contain in line',
       expected: execLine,
       actual: testLines,
     });
