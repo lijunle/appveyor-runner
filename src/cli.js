@@ -6,6 +6,10 @@ export default async function cli(configFile) {
   const configDir = path.dirname(configFile);
   const config = await parseConfig(configFile);
 
+  const cwd = config.cwd
+    ? path.resolve(configDir, config.cwd)
+    : process.cwd();
+
   const binDir = config.bin
     ? path.resolve(configDir, config.bin)
     : path.resolve(process.cwd(), 'node_bin');
@@ -17,7 +21,7 @@ export default async function cli(configFile) {
   return runner(
     process.stdout,
     process.stderr,
-    process.cwd(),
+    cwd,
     binDir,
     logDir,
     config.versions,

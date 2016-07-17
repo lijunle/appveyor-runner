@@ -35,3 +35,15 @@ test('CLI should parse bin and log dir from config', async (t, context) => {
   const logPath = path.resolve(__dirname, './configs/fixture-2/log/v6.2.2-output.txt');
   t.exists(logPath);
 });
+
+test('CLI should parse cwd from config', async (t, context) => {
+  const getStdout = context.hookStream(process.stdout);
+
+  const configFile = path.resolve(__dirname, './configs/fixture-3.yml');
+  const code = await cli(configFile);
+
+  t.equal(code, 0);
+
+  const stdout = getStdout();
+  t.includes(stdout, 'Here is fixture-3 test content.');
+});
