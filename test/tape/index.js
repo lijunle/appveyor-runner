@@ -5,7 +5,7 @@ import mkdirp from 'mkdirp-promise';
 import tape from 'tape-promise/tape';
 import { Test } from 'tape';
 
-const binDir = path.resolve(__dirname, '../node_bin');
+const binDir = path.resolve(__dirname, './bin');
 
 Test.prototype.includes = function includes(a, b, msg, extra) {
   this._assert(a.includes(b), { // eslint-disable-line no-underscore-dangle
@@ -94,7 +94,7 @@ export default function test(name, listener) {
   tape(name, async (t) => {
     // create unique log folder for each test case
     const now = Date.now().toString();
-    const logDir = path.resolve(__dirname, 'logs', now);
+    const logDir = path.resolve(__dirname, 'log', now);
     await mkdirp(logDir);
 
     // create stdout and stderr stream

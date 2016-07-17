@@ -1,4 +1,4 @@
-bin: ..\..\node_bin
+bin: ..\tape\bin
 log: .\appveyor-runner\log
 
 version:
