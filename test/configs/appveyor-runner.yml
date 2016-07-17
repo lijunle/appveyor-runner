@@ -1,0 +1,8 @@
+bin: ..\..\node_bin
+log: ..\..\node_log
+
+version:
+  - 6.2.2
+
+script:
+  - echo Default to appveyor-runner.yml file

@@ -2,7 +2,7 @@ import path from 'path';
 import runner from './index';
 import parseConfig from './parse-config';
 
-export default async function cli(configFile = 'appveyor.yml') {
+export default async function cli(configFile = 'appveyor-runner.yml') {
   const configDir = path.dirname(path.resolve(process.cwd(), configFile));
   const config = await parseConfig(configFile);
 
