@@ -1,57 +1,11 @@
-import fs from 'fs';
 import path from 'path';
 import through2 from 'through2';
 import mkdirp from 'mkdirp-promise';
 import tape from 'tape-promise/tape';
-import { Test } from 'tape';
 
-const binDir = path.resolve(__dirname, '../node_bin');
+import './test-method';
 
-Test.prototype.includes = function includes(a, b, msg, extra) {
-  this._assert(a.includes(b), { // eslint-disable-line no-underscore-dangle
-    message: msg || 'should includes',
-    operator: 'includes',
-    expected: b,
-    actual: a,
-    extra,
-  });
-};
-
-Test.prototype.below = function includes(a, b, msg, extra) {
-  this._assert(a < b, { // eslint-disable-line no-underscore-dangle
-    message: msg || 'should be below',
-    operator: 'below',
-    expected: b,
-    actual: a,
-    extra,
-  });
-};
-
-function doesPathExist(targetPath) {
-  try {
-    fs.accessSync(targetPath);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function findUpPath(targetPath) {
-  const pathDir = path.dirname(targetPath);
-  return doesPathExist(pathDir)
-    ? pathDir
-    : findUpPath(pathDir);
-}
-
-Test.prototype.exists = function exists(targetPath, msg, extra) {
-  this._assert(doesPathExist(targetPath), { // eslint-disable-line no-underscore-dangle
-    message: msg || 'should exist',
-    operator: 'exists',
-    expected: targetPath,
-    get actual() { return findUpPath(targetPath); },
-    extra,
-  });
-};
+const binDir = path.resolve(__dirname, './bin');
 
 function createStream() {
   let str = '';
@@ -94,7 +48,7 @@ export default function test(name, listener) {
   tape(name, async (t) => {
     // create unique log folder for each test case
     const now = Date.now().toString();
-    const logDir = path.resolve(__dirname, 'logs', now);
+    const logDir = path.resolve(__dirname, 'log', now);
     await mkdirp(logDir);
 
     // create stdout and stderr stream

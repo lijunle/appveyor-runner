@@ -15,6 +15,6 @@ test('runner should parse node.js semver and run with it', async (t, context) =>
   const stdout = context.getStdout();
 
   // Version 5 has stopped development and maintain, this version will not change any more.
-  t.includes(stdout, '5.12.0');
-  t.includes(stdout, 'Finish');
+  t.include(stdout, '5.12.0');
+  t.include(stdout, 'Finish');
 });

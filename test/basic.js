@@ -48,9 +48,9 @@ test('runner should redirect stdout', async (t, context) => {
   const stderr = context.getStderr();
   const lines = stdout.split(EOL);
 
-  t.includes(stdout, '6.2.2');
-  t.includes(lines, `[Runner][6.2.2][Script] ${script}`);
-  t.includes(lines, `[Runner][6.2.2][Stdout] ${output}`);
+  t.include(stdout, '6.2.2');
+  t.include(lines, `[Runner][6.2.2][Script] ${script}`);
+  t.include(lines, `[Runner][6.2.2][Stdout] ${output}`);
   t.equal(stderr, '');
 });
 
@@ -72,9 +72,9 @@ test('runner should redirect stderr', async (t, context) => {
   const stderr = context.getStderr();
   const lines = stdout.split(EOL);
 
-  t.includes(stdout, '6.2.2');
-  t.includes(lines, `[Runner][6.2.2][Script] ${script}`);
-  t.includes(lines, `[Runner][6.2.2][Stderr] ${output}`);
+  t.include(stdout, '6.2.2');
+  t.include(lines, `[Runner][6.2.2][Script] ${script}`);
+  t.include(lines, `[Runner][6.2.2][Stderr] ${output}`);
   t.equal(stderr, '');
 });
 
@@ -90,10 +90,10 @@ test('runner should run multiple versions', async (t, context) => {
   );
 
   const stdout = context.getStdout();
-  t.includes(stdout, '[Runner][4.4.6][Stdout]');
-  t.includes(stdout, '[Runner][6.2.2][Stdout]');
-  t.includes(stdout, '"node":"4.4.6"');
-  t.includes(stdout, '"node":"6.2.2"');
+  t.include(stdout, '[Runner][4.4.6][Stdout]');
+  t.include(stdout, '[Runner][6.2.2][Stdout]');
+  t.include(stdout, '"node":"4.4.6"');
+  t.include(stdout, '"node":"6.2.2"');
 });
 
 test('runner should run multiple scripts', async (t, context) => {
@@ -112,8 +112,8 @@ test('runner should run multiple scripts', async (t, context) => {
 
   const expected1 = '[Runner][6.2.2][Stdout] script-1';
   const expected2 = '[Runner][6.2.2][Stdout] script-2';
-  t.includes(lines, expected1);
-  t.includes(lines, expected2);
+  t.include(lines, expected1);
+  t.include(lines, expected2);
 
   const index1 = lines.indexOf(expected1);
   const index2 = lines.indexOf(expected2);

@@ -17,7 +17,7 @@ test('npm should append .bin to environment path', async (t, context) => {
 
   const stdout = context.getStdout();
   const npmBinDir = path.resolve(__dirname, './scripts/npm/node_modules/.bin');
-  t.includes(stdout, npmBinDir);
+  t.include(stdout, npmBinDir);
 });
 
 test('npm should output line by line', async (t, context) => {
@@ -50,8 +50,8 @@ test('npm should output line by line', async (t, context) => {
     }
 
     t._assert(false, { // eslint-disable-line no-underscore-dangle
-      message: 'should contains in line',
-      operator: 'contains in line',
+      message: 'should contain in line',
+      operator: 'contain in line',
       expected: execLine,
       actual: testLines,
     });

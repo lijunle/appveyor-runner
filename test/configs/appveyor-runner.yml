@@ -1,5 +1,5 @@
-bin: ..\..\node_bin
-log: ..\..\node_log
+bin: ..\tape\bin
+log: .\appveyor-runner\log
 
 version:
   - 6.2.2
