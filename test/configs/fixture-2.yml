@@ -1,0 +1,7 @@
+runner:
+  bin: ./fixture-2/bin
+  log: ./fixture-2/log
+  versions:
+    - 6.2.2
+  scripts:
+    - echo Check bin and log directories

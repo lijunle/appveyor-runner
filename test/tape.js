@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import through2 from 'through2';
 import mkdirp from 'mkdirp-promise';
@@ -22,6 +23,32 @@ Test.prototype.below = function includes(a, b, msg, extra) {
     operator: 'below',
     expected: b,
     actual: a,
+    extra,
+  });
+};
+
+function doesPathExist(targetPath) {
+  try {
+    fs.accessSync(targetPath);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function findUpPath(targetPath) {
+  const pathDir = path.dirname(targetPath);
+  return doesPathExist(pathDir)
+    ? pathDir
+    : findUpPath(pathDir);
+}
+
+Test.prototype.exists = function exists(targetPath, msg, extra) {
+  this._assert(doesPathExist(targetPath), { // eslint-disable-line no-underscore-dangle
+    message: msg || 'should exist',
+    operator: 'exists',
+    expected: targetPath,
+    get actual() { return findUpPath(targetPath); },
     extra,
   });
 };
