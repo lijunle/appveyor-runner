@@ -142,7 +142,10 @@ export default async function runner(out, err, workingDir, binDir, logDir, versi
     const targetVersions = await parseVersions(versions);
     stdout(`[Runner] Got target versions: ${targetVersions}`);
 
-    const runs = targetVersions.map(v => run(stdout, stderr, workingDir, binDir, logDir, v, scripts));
+    const runs = targetVersions.map(version =>
+      run(stdout, stderr, workingDir, binDir, logDir, version, scripts)
+    );
+
     const exitCode = (await Promise.all(runs)).some(code => code !== 0) ? -1 : 0;
     stdout(`[Runner] All tasks are completed. Return exit code: ${exitCode}`);
     return exitCode;
