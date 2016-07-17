@@ -12,6 +12,7 @@ test_script:
   - npm run lint
   - .\test.cmd coverage
   - .\test.cmd
+  - node .\build\check-git.js
   - node .\build\coverage.js | node_modules\.bin\codecov
 
 build: off
