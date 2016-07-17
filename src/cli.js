@@ -24,7 +24,7 @@ export default async function cli(configFile = 'appveyor.yml') {
     cwd,
     binDir,
     logDir,
-    config.versions || [],
-    config.scripts || [],
+    config.version || [],
+    config.script || [],
   );
 }

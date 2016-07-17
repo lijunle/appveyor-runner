@@ -1,6 +1,7 @@
-runner:
-  cwd: ./fixture-3
-  versions:
-    - 6.2.2
-  scripts:
-    - more file.txt
+cwd: ./fixture-3
+
+version:
+  - 6.2.2
+
+script:
+  - more file.txt
