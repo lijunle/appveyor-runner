@@ -17,6 +17,15 @@ function getNodejsIndex() {
 export default async function parseVersions(versions) {
   const nodejsIndex = await getNodejsIndex();
   const nodeVersions = nodejsIndex.map(data => semver.clean(data.version));
-  const targetVersions = versions.map(version => semver.maxSatisfying(nodeVersions, version));
+
+  const targetVersions = versions.map(version => {
+    const targetVersion = semver.maxSatisfying(nodeVersions, version);
+    if (!targetVersion) {
+      throw new Error(`Verson ${version} does not satisfy any node.js versions`);
+    }
+
+    return targetVersion;
+  });
+
   return targetVersions;
 }
