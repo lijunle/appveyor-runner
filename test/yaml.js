@@ -2,7 +2,7 @@ import path from 'path';
 import test from './tape';
 import cli from '../src/cli';
 
-test('CLI should default config file to appveyor.yml', async (t, context) => {
+test('CLI should default config file to appveyor-runner.yml', async (t, context) => {
   const getStdout = context.hookStream(process.stdout);
   const restoreCwd = context.hookCwd(path.resolve(__dirname, './configs'));
 
@@ -10,7 +10,7 @@ test('CLI should default config file to appveyor.yml', async (t, context) => {
   t.equal(code, 0);
 
   const stdout = getStdout();
-  t.includes(stdout, 'Default to appveyor.yml file');
+  t.includes(stdout, 'Default to appveyor-runner.yml file');
 
   restoreCwd();
 });
