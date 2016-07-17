@@ -1,0 +1,7 @@
+runner:
+  versions:
+    - 4.4.6
+    - 6.2.2
+  scripts:
+    - echo First
+    - echo Second

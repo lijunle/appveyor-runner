@@ -1,14 +1,16 @@
 import path from 'path';
 import runner from './index';
+import parseConfig from './parse-config';
 
-export default function cli() {
+export default async function cli(configFile) {
+  const config = await parseConfig(configFile);
   return runner(
     process.stdout,
     process.stderr,
     process.cwd(),
     path.resolve(process.cwd(), 'node_bin'),
     path.resolve(process.cwd(), 'node_log'),
-    ['6.2.2'],
-    ['node --version', 'npm --version', 'more index.js >&2']
+    config.versions,
+    config.scripts,
   );
 }

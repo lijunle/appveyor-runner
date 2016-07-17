@@ -40,6 +40,23 @@ function createStream() {
   };
 }
 
+function hookStream(stream) {
+  let str = '';
+  const originalStdoutWrite = stream._write; // eslint-disable-line no-underscore-dangle
+
+  // eslint-disable-next-line no-param-reassign, no-underscore-dangle
+  stream._write = (chunk, encoding, done) => {
+    str += chunk;
+    done();
+  };
+
+  return () => {
+    // eslint-disable-next-line no-param-reassign, no-underscore-dangle
+    stream._write = originalStdoutWrite;
+    return str;
+  };
+}
+
 export default function test(name, listener) {
   tape(name, async (t) => {
     // create unique log folder for each test case
@@ -59,6 +76,7 @@ export default function test(name, listener) {
       stderr,
       getStdout,
       getStderr,
+      hookStream,
     };
 
     // run the listener
